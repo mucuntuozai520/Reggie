@@ -1,6 +1,7 @@
 package com.linfeng.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import com.linfeng.common.CustomException;
@@ -87,6 +88,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         List<DishFlavor> flavors = dishDto.getFlavors();
 
         flavors = flavors.stream().map((item) -> {
+            item.setId(IdWorker.getId());
             item.setDishId(dishDto.getId());
             return item;
         }).collect(Collectors.toList());
