@@ -72,4 +72,4 @@ reggie:
 spring:
   profiles: produce
 reggie:
-  path: /usr/local/reggie/img
+  path: /usr/local/reggie/img/
