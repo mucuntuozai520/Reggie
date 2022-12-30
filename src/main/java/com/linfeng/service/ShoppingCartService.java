@@ -6,4 +6,5 @@ import com.linfeng.entity.ShoppingCart;
 
 public interface ShoppingCartService extends IService<ShoppingCart> {
 
+    void clean();
 }
