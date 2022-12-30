@@ -1,6 +1,57 @@
 spring:
   profiles:
     active: develop
+  application:
+    name: reggie_take_out
+  shardingsphere:
+    datasource:
+      names:
+        master,slave  # 数据源名字，可自定义，只要上下对应即可
+      # 主数据源
+      master:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.100.131:3306/reggie?characterEncoding=utf-8&useSSL=false
+        username: root
+        password: root
+        use-ping-method: false #防止druid空闲时间报错
+      # 从数据源
+      slave:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.100.132:3306/reggie?characterEncoding=utf-8&useSSL=false
+        username: root
+        password: root
+        use-ping-method: false #防止druid空闲时间报错
+    masterslave:
+      # 读写分离配置
+      load-balance-algorithm-type: round_robin  # 负载均衡策略：轮询
+      # 最终的数据源名称
+      name: dataSource
+      # 主库数据源名称
+      master-data-source-name: master
+      # 从库数据源名称列表，多个逗号分隔
+      slave-data-source-names: slave
+    props:
+      sql:
+        show: true #开启SQL显示，默认false
+  main:
+    allow-bean-definition-overriding: true  # 允许 bean 定义覆盖配置项
+  redis:
+    host: 192.168.100.131 # 连接ip
+    port: 6379  # 端口
+    password: 2534800363
+    database: 0 #操作的是0号数据库
+    jedis:
+      #Redis连接池配置
+      pool:
+        max-active: 8 #最大连接数
+        max-wait: 1ms #连接池最大阻塞等待时间
+        max-idle: 4 #连接池中的最大空闲连接
+        min-idle: 0 #连接池中的最小空闲连接
+  cache:
+    redis:
+      time-to-live: 1800000
 server:
   port: 8080
 mybatis-plus:
@@ -14,84 +65,11 @@ mybatis-plus:
 ---
 spring:
   profiles: develop
-  application:
-    name: reggie_take_out
-  datasource:
-    druid:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/reggie?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
-      username: root
-      password: root
-  redis:
-    host: localhost # 连接ip
-    port: 6379  # 端口
-    database: 0 #操作的是0号数据库
-    jedis:
-      #Redis连接池配置
-      pool:
-        max-active: 8 #最大连接数
-        max-wait: 1ms #连接池最大阻塞等待时间
-        max-idle: 4 #连接池中的最大空闲连接
-        min-idle: 0 #连接池中的最小空闲连接
-  cache:
-    redis:
-      time-to-live: 1800000
 reggie:
   path: D:\Test\reggie-img\
 
 ---
-  spring:
-    profiles: produce
-    application:
-      name: reggie_take_out
-    shardingsphere:
-      datasource:
-        names:
-          master,slave  # 数据源名字，可自定义，只要上下对应即可
-        # 主数据源
-        master:
-          type: com.alibaba.druid.pool.DruidDataSource
-          driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://192.168.100.131:3306/reggie?characterEncoding=utf-8&useSSL=false
-          username: root
-          password: root
-          use-ping-method: false #防止druid空闲时间报错
-        # 从数据源
-        slave:
-          type: com.alibaba.druid.pool.DruidDataSource
-          driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://192.168.100.132:3306/reggie?characterEncoding=utf-8&useSSL=false
-          username: root
-          password: root
-          use-ping-method: false #防止druid空闲时间报错
-      masterslave:
-        # 读写分离配置
-        load-balance-algorithm-type: round_robin  # 负载均衡策略：轮询
-        # 最终的数据源名称
-        name: dataSource
-        # 主库数据源名称
-        master-data-source-name: master
-        # 从库数据源名称列表，多个逗号分隔
-        slave-data-source-names: slave
-      props:
-        sql:
-          show: true #开启SQL显示，默认false
-    main:
-      allow-bean-definition-overriding: true  # 允许 bean 定义覆盖配置项
-    redis:
-      host: 192.168.100.131 # 连接ip
-      port: 6379  # 端口
-      password: 2534800363
-      database: 0 #操作的是0号数据库
-      jedis:
-        #Redis连接池配置
-        pool:
-          max-active: 8 #最大连接数
-          max-wait: 1ms #连接池最大阻塞等待时间
-          max-idle: 4 #连接池中的最大空闲连接
-          min-idle: 0 #连接池中的最小空闲连接
-    cache:
-      redis:
-        time-to-live: 1800000
+spring:
+  profiles: produce
 reggie:
   path: /usr/local/reggie/img
